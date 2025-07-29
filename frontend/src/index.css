@@ -1,1 +1,20 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Monoton&family=Outfit:wght@100..900&display=swap");
 @import "tailwindcss";
+
+* {
+  font-family: "Outfit", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+::-webkit-scrollbar {
+  display: none;
+}
+
+
+@theme{
+    /* Define primary brand color as a CSS custom
+        property/variable for reuse throughout the application 
+        for more info: https://tailwindcss.com/docs/theme
+        */
+    --color-primary: #5044E5;
+}
