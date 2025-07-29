@@ -10,11 +10,10 @@
   display: none;
 }
 
-
-@theme{
-    /* Define primary brand color as a CSS custom
+@theme {
+  /* Define primary brand color as a CSS custom
         property/variable for reuse throughout the application 
         for more info: https://tailwindcss.com/docs/theme
         */
-    --color-primary: #5044E5;
+  --color-primary: #5044e5;
 }

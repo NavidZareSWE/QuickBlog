@@ -10,8 +10,8 @@ const Home = () => {
       <Navbar />
       <Header />
       <BlogList />
-      <Newsletter/>
-      <Footer/>
+      <Newsletter />
+      <Footer />
     </>
   );
 };
