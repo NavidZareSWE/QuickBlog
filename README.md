@@ -41,21 +41,20 @@ A modern full-stack blogging platform built with the MERN stack, featuring AI-po
 # Installation
 
 1. Clone the repository
-
-&#8203;
+```   
     git clone https://github.com/NavidZareSWE/QuickBlog.git
     cd QuickBlog
-
+```
 2. Install backend dependencies
-
+```
     cd backend
     npm install
-
+```
 3. Install frontend dependencies
-
+```
     cd ../frontend
     npm install
-
+```
 
 4. Start the development servers
 
