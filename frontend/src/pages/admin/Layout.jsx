@@ -26,8 +26,8 @@ const Layout = () => {
         </button>
       </div>
       <div className="flex h-[calc(100vh-70px)]">
-        <Sidebar/>
-        <Outlet/>
+        <Sidebar />
+        <Outlet />
         {/* Outlet component will display the child component,
          defined as sub-routes of /admin */}
       </div>

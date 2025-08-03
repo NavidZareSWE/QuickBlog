@@ -14,7 +14,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/blog/:id" element={<Blog />} />
-        <Route path="/admin" element={true ? <Layout /> : <Login/>}>
+        <Route path="/admin" element={true ? <Layout /> : <Login />}>
           {/* 
   When the "/admin" URL is accessed, the Layout component will be rendered, 
   and the Dashboard component will be displayed as the default child route
