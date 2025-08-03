@@ -166,7 +166,12 @@ const AddBlog = () => {
             onChange={(e) => setIsPublished(e.target.checked)}
           />
         </div>
-        <button type="submit" className="mt-8 w-40 h-10 bg-primary text-white rounded cursor-pointer text-sm hover:scale-105">Add Blog</button>
+        <button
+          type="submit"
+          className="mt-8 w-40 h-10 bg-primary text-white rounded cursor-pointer text-sm hover:scale-105"
+        >
+          Add Blog
+        </button>
       </div>
     </form>
   );
