@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/NavidZareSWE/QuickBlog/issues"
   },
-  "homepage": "https://github.com/NavidZareSWE/QuickBlog#readme"
+  "homepage": "https://github.com/NavidZareSWE/QuickBlog#readme",
+  "dependencies": {
+    "quill": "^2.0.3"
+  }
 }
