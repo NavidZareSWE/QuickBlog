@@ -2,6 +2,7 @@ import fs from "fs";
 import imagekit from "../config/ImageKit.js";
 import Blog from "../models/Blog.js";
 import mongoose from "mongoose";
+import Comment from "../models/Comment.js";
 
 export const addBlog = async (req, res) => {
   const session = await mongoose.startSession();
@@ -11,7 +12,7 @@ export const addBlog = async (req, res) => {
     session.startTransaction();
 
     const { title, subTitle, description, category, isPublished } = JSON.parse(
-      req.body.blog,
+      req.body.blog
     );
     const image = req.file;
 
@@ -59,7 +60,7 @@ export const addBlog = async (req, res) => {
           isPublished,
         },
       ],
-      { session },
+      { session }
     );
 
     // Commit the transaction
@@ -76,7 +77,7 @@ export const addBlog = async (req, res) => {
       try {
         await imagekit.deleteFile(uploadedImageId);
         console.log(
-          "🧹 Image deletion successful! Cleaned up uploaded image due to database error",
+          "🧹 Image deletion successful! Cleaned up uploaded image due to database error"
         );
       } catch (cleanupError) {
         console.error("Failed to cleanup uploaded image:", cleanupError);
@@ -117,6 +118,14 @@ export const deleteBlogById = async (req, res) => {
   try {
     const { id } = req.body;
     await Blog.findByIdAndDelete(id);
+    // Delete all comments associated with the blog
+    /** 
+ * This line deletes all comment documents that reference the 
+ * specified blog ID. The deleteMany method removes all matching 
+ * documents from the Comment collection.
+ */
+
+    await Comment.deleteMany({blog: id})
     res
       .status(200)
       .json({ success: true, message: "Blog deleted successfully" });
@@ -132,6 +141,34 @@ export const togglePublish = async (req, res) => {
     blog.isPublished = !blog.isPublished;
     await blog.save();
     res.status(200).json({ success: true, message: "Blog Status Updated" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const addComment = async (req, res) => {
+  try {
+    const { blog, name, content } = req.body;
+    await Comment.create({
+      blog,
+      name,
+      content,
+    });
+    res
+      .status(201)
+      .json({ success: true, message: "Comment added for review." });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+export const getBlogComments = async (req, res) => {
+  try {
+    const { blogId } = req.body;
+    const comments = await Comment.find({
+      blog: blogId,
+      isApproved: true,
+    }).sort({ createdAt: -1 });
+    res.status(200).json({ success: true, comments });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
