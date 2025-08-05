@@ -12,7 +12,7 @@ export const addBlog = async (req, res) => {
     session.startTransaction();
 
     const { title, subTitle, description, category, isPublished } = JSON.parse(
-      req.body.blog
+      req.body.blog,
     );
     const image = req.file;
 
@@ -60,7 +60,7 @@ export const addBlog = async (req, res) => {
           isPublished,
         },
       ],
-      { session }
+      { session },
     );
 
     // Commit the transaction
@@ -77,7 +77,7 @@ export const addBlog = async (req, res) => {
       try {
         await imagekit.deleteFile(uploadedImageId);
         console.log(
-          "🧹 Image deletion successful! Cleaned up uploaded image due to database error"
+          "🧹 Image deletion successful! Cleaned up uploaded image due to database error",
         );
       } catch (cleanupError) {
         console.error("Failed to cleanup uploaded image:", cleanupError);
@@ -119,13 +119,13 @@ export const deleteBlogById = async (req, res) => {
     const { id } = req.body;
     await Blog.findByIdAndDelete(id);
     // Delete all comments associated with the blog
-    /** 
- * This line deletes all comment documents that reference the 
- * specified blog ID. The deleteMany method removes all matching 
- * documents from the Comment collection.
- */
+    /**
+     * This line deletes all comment documents that reference the
+     * specified blog ID. The deleteMany method removes all matching
+     * documents from the Comment collection.
+     */
 
-    await Comment.deleteMany({blog: id})
+    await Comment.deleteMany({ blog: id });
     res
       .status(200)
       .json({ success: true, message: "Blog deleted successfully" });
