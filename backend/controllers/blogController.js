@@ -11,7 +11,7 @@ export const addBlog = async (req, res) => {
     session.startTransaction();
 
     const { title, subTitle, description, category, isPublished } = JSON.parse(
-      req.body.blog
+      req.body.blog,
     );
     const image = req.file;
 
@@ -59,7 +59,7 @@ export const addBlog = async (req, res) => {
           isPublished,
         },
       ],
-      { session }
+      { session },
     );
 
     // Commit the transaction
@@ -76,7 +76,7 @@ export const addBlog = async (req, res) => {
       try {
         await imagekit.deleteFile(uploadedImageId);
         console.log(
-          "🧹 Image deletion successful! Cleaned up uploaded image due to database error"
+          "🧹 Image deletion successful! Cleaned up uploaded image due to database error",
         );
       } catch (cleanupError) {
         console.error("Failed to cleanup uploaded image:", cleanupError);
@@ -101,7 +101,7 @@ export const getAllBlogs = async (req, res) => {
 export const getBlogById = async (req, res) => {
   try {
     const { blogId } = req.params;
-    const blog = await Blog.findById( blogId );
+    const blog = await Blog.findById(blogId);
     if (!blog)
       return res
         .status(404)

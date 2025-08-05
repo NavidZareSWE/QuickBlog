@@ -12,7 +12,7 @@ const blogSchema = new mongoose.Schema(
       which automatically adds 'createdAt' and 'updatedAt' fields to the schema.
  */
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Blog = mongoose.model("blog", blogSchema);
