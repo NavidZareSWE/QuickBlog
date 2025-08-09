@@ -4,6 +4,7 @@ import ImageCropper from "../../components/common/ImageCropper";
 import Quill from "quill";
 import { useAppContext } from "../../hooks/useAppContext";
 import toast from "react-hot-toast";
+import { parse } from "marked";
 
 const AddBlog = () => {
   const editorRef = useRef(null);
@@ -11,6 +12,7 @@ const AddBlog = () => {
   const { axios } = useAppContext();
 
   const [isAdding, setIsAdding] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [image, setImage] = useState(false);
   const [title, setTitle] = useState("");
@@ -46,7 +48,28 @@ const AddBlog = () => {
     ],
   };
 
-  const generateContent = async () => {};
+  const generateContent = async () => {
+    try {
+      if (!title)
+        return toast.error("Please enter a title to generate a blog!");
+      setIsLoading(true);
+      const { data } = await axios.post("/api/blog/generate", {
+        prompt: title,
+      });
+      if (data.success)
+        /**
+         * Parse markdown to HTML (unsanitized - sanitize output before rendering).
+         * ⬇️ Low-level compiler for parsing markdown without caching
+         * or blocking for long periods of time.
+         * Read More: https://github.com/markedjs/marked
+         */
+        quillRef.current.root.innerHTML = parse(data.content);
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const onSubmitHandler = async (e) => {
     try {
@@ -197,7 +220,13 @@ const AddBlog = () => {
         <p className="mt-4">Blog Description</p>
         <div className="max-w-lg h-74 pb-16 sm:pb-10 pt-2 relative">
           <div ref={editorRef}></div>
+          {isLoading && (
+            <div className=" absolute right-0 top-0 bottom-0 left-0 flex items-center justify-center bg-black/10 mt-2 ">
+              <div className="w-8 h-8 rounded-full border-2 border-t-white animate-spin"></div>
+            </div>
+          )}
           <button
+            disabled={isLoading}
             type="button"
             onClick={generateContent}
             className="absolute bottom-1 right-2 ml-2 text-xs text-white bg-black/70 px-4 py-1.5 rounded hover:underline cursor-pointer"

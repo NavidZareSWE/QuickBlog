@@ -3,6 +3,7 @@ import imagekit from "../config/ImageKit.js";
 import Blog from "../models/Blog.js";
 import mongoose from "mongoose";
 import Comment from "../models/Comment.js";
+import Gemini from "../config/Gemini.js";
 
 export const addBlog = async (req, res) => {
   const session = await mongoose.startSession();
@@ -173,3 +174,12 @@ export const getBlogComments = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+export const generateContent = async (req,res) => {
+  try {
+    const {prompt} = req.body
+    const content = await Gemini(prompt + ' Generate a blog content for this topic in simple text format.')
+    res.status(200).json({ success: true, content });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+}
