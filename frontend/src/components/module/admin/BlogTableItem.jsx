@@ -12,7 +12,7 @@ const BlogTableItem = ({ blog, fetchBlogs, index }) => {
   const deleteBlog = async () => {
     try {
       const confirm = window.confirm(
-        "Are you sure you want to delete this blog?"
+        "Are you sure you want to delete this blog?",
       );
       if (!confirm) return;
       const { data } = await axios.post("/api/blog/delete", { id: blog._id });
@@ -26,16 +26,17 @@ const BlogTableItem = ({ blog, fetchBlogs, index }) => {
   };
   const togglePublish = async () => {
     try {
-      const { data } = await axios.post("/api/blog/toggle-publish", { id: blog._id });
-       if (data.success) {
+      const { data } = await axios.post("/api/blog/toggle-publish", {
+        id: blog._id,
+      });
+      if (data.success) {
         toast.success(data.message);
         await fetchBlogs();
       }
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
-      
     }
-  }
+  };
 
   return (
     <tr className="border-y border-gray-300">
@@ -50,11 +51,14 @@ const BlogTableItem = ({ blog, fetchBlogs, index }) => {
         </p>
       </td>
       <td className="px-2 py-4 flex text-xs gap-3">
-        <button onClick={togglePublish} className="border px-2 py-0.5 mt-1 rounded cursor-pointer">
+        <button
+          onClick={togglePublish}
+          className="border px-2 py-0.5 mt-1 rounded cursor-pointer"
+        >
           {blog.isPublished ? `Unpublish` : `Publish`}
         </button>
         <img
-        onClick={deleteBlog}
+          onClick={deleteBlog}
           src={assets.cross_icon}
           className="w-8 hover:scale-110 transition-all cursor-pointer"
           alt="Remove"

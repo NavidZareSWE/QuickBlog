@@ -12,7 +12,7 @@ import { Toaster } from "react-hot-toast";
 import { useAppContext } from "./hooks/useAppContext";
 
 const App = () => {
-  const {token} = useAppContext();
+  const { token } = useAppContext();
   return (
     <div>
       <Toaster />

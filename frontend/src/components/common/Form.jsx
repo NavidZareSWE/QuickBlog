@@ -1,56 +1,53 @@
 import { useRef, forwardRef, useImperativeHandle } from "react";
 
-const Form = forwardRef(({ 
-  placeholder, 
-  required, 
-  buttonText = "Submit",
-  onSubmit,
-  ...otherProps 
-}, ref) => {
-  const inputRef = useRef();
+const Form = forwardRef(
+  (
+    { placeholder, required, buttonText = "Submit", onSubmit, ...otherProps },
+    ref,
+  ) => {
+    const inputRef = useRef();
 
-  const clear = () => {
-    inputRef.current.value = "";
-  }
+    const clear = () => {
+      inputRef.current.value = "";
+    };
 
-  // Expose the clear method to parent component
-  useImperativeHandle(ref, () => ({
-    clear
-  }));
-  
-  const onSubmitHandler = async (e) => {
-    e.preventDefault();
-    if (onSubmit) {
-      onSubmit(inputRef.current.value);
-    }
-  };
+    // Expose the clear method to parent component
+    useImperativeHandle(ref, () => ({
+      clear,
+    }));
 
-  return (
-    <form
-      onSubmit={onSubmitHandler}
-      className="flex justify-between max-w-lg max-sm:scale-75 scale-90 mx-auto border border-gray-300 bg-white rounded overflow-hidden"
-    >
-      <input
-        ref={inputRef}
-        type="text"
-        placeholder={placeholder}
-        required={required}
-        className="w-full pl-4 outline-none"
-        {...otherProps}
-      />
-      <button
-        type="submit"
-        className="bg-primary text-white px-8 py-2 m-1.5 rounded hover:scale-105 transition-all cursor-pointer"
+    const onSubmitHandler = async (e) => {
+      e.preventDefault();
+      if (onSubmit) {
+        onSubmit(inputRef.current.value);
+      }
+    };
+
+    return (
+      <form
+        onSubmit={onSubmitHandler}
+        className="flex justify-between max-w-lg max-sm:scale-75 scale-90 mx-auto border border-gray-300 bg-white rounded overflow-hidden"
       >
-        {buttonText}
-      </button>
-    </form>
-  );
-});
+        <input
+          ref={inputRef}
+          type="text"
+          placeholder={placeholder}
+          required={required}
+          className="w-full pl-4 outline-none"
+          {...otherProps}
+        />
+        <button
+          type="submit"
+          className="bg-primary text-white px-8 py-2 m-1.5 rounded hover:scale-105 transition-all cursor-pointer"
+        >
+          {buttonText}
+        </button>
+      </form>
+    );
+  },
+);
 
 export default Form;
-
-
 
 /*
 forwardRef:

@@ -46,8 +46,6 @@ const AddBlog = () => {
     ],
   };
 
-
-
   const generateContent = async () => {};
 
   const onSubmitHandler = async (e) => {
@@ -65,7 +63,7 @@ const AddBlog = () => {
       // Stringify the blog object to JSON format for transmission in FormData,
       // ensuring compatibility and preserving its structure for server processing.
       formData.append("blog", JSON.stringify(blog));
-            // Convert blob URL to actual blob and append to FormData
+      // Convert blob URL to actual blob and append to FormData
       if (image) {
         if (canUseCropper && image.startsWith("blob:")) {
           const response = await fetch(image);
@@ -82,16 +80,15 @@ const AddBlog = () => {
         toast.success(data.message);
         setImage(false);
         setTitle("");
-        setSubTitle('')
-        setIsPublished(false)
+        setSubTitle("");
+        setIsPublished(false);
         quillRef.current.root.innerHTML = "";
         setCategory("Startup");
       }
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
-    }
-    finally{
-      setIsAdding(false)
+    } finally {
+      setIsAdding(false);
     }
   };
 
@@ -111,8 +108,10 @@ const AddBlog = () => {
     >
       <div className="bg-white w-full max-w-3xl p-4 md:p-10 sm:m-10 shadow rounded">
         <p>Upload thumbnail</p>
-                <div className="flex gap-2 mt-4">
-          <p>Use Cropper? <b>(Beta)</b></p>
+        <div className="flex gap-2 mt-4">
+          <p>
+            Use Cropper? <b>(Beta)</b>
+          </p>
           <input
             type="checkbox"
             checked={canUseCropper}
@@ -134,7 +133,7 @@ const AddBlog = () => {
             }
             alt="Upload"
           />
-          {(canUseCropper && open) ? (
+          {canUseCropper && open ? (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
               {/* Backdrop */}
               <div
@@ -167,13 +166,15 @@ const AddBlog = () => {
                 )}
               </div>
             </div>
-          ) : (            <input
+          ) : (
+            <input
               onChange={(e) => setImage(e.target.files[0])}
               type="file"
               name="image"
               id="image"
               hidden
-            />)}
+            />
+          )}
         </label>
         <p className="mt-4">Blog Title</p>
         <input

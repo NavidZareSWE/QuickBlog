@@ -8,9 +8,9 @@ const Header = () => {
   const fromRef = useRef();
 
   const onClear = () => {
-    setInput('')
+    setInput("");
     fromRef.current.clear();
-  }
+  };
   return (
     <div className="mx-8 sm:mx-16 xl:mx-24 relative">
       <div className="text-center mt-20 mb-8">
@@ -43,7 +43,10 @@ const Header = () => {
 
       <div className="text-center">
         {input && (
-          <button onClick={onClear} className="border font-light text-xs py-1 px-3 rounded-sm shadow-custom-sm cursor-pointer">
+          <button
+            onClick={onClear}
+            className="border font-light text-xs py-1 px-3 rounded-sm shadow-custom-sm cursor-pointer"
+          >
             Clear Search
           </button>
         )}

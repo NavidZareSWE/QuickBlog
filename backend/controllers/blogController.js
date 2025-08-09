@@ -16,7 +16,6 @@ export const addBlog = async (req, res) => {
     );
     const image = req.file;
 
-
     if (!title || !description || !category || !image)
       return res
         .status(400)

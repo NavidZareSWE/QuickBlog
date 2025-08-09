@@ -48,10 +48,9 @@ export const AppContextProvider = ({ children }) => {
     blogs,
     setBlogs,
     input,
-    setInput
+    setInput,
   };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
-
 
 export default AppContext;
