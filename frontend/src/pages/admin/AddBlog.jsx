@@ -2,16 +2,23 @@ import { useEffect, useRef, useState } from "react";
 import { assets, blogCategories } from "../../assets/images/assets";
 import ImageCropper from "../../components/common/ImageCropper";
 import Quill from "quill";
+import { useAppContext } from "../../hooks/useAppContext";
+import toast from "react-hot-toast";
 
 const AddBlog = () => {
   const editorRef = useRef(null);
   const quillRef = useRef(null);
+  const { axios } = useAppContext();
+
+  const [isAdding, setIsAdding] = useState(false);
 
   const [image, setImage] = useState(false);
   const [title, setTitle] = useState("");
   const [subTitle, setSubTitle] = useState("");
   const [category, setCategory] = useState("Startup");
   const [isPublished, setIsPublished] = useState(false);
+
+  const [canUseCropper, setCanUseCropper] = useState(false);
   const [open, setOpen] = useState(false);
   const [croppedImage, setCroppedImage] = useState(null);
   const [croppedVerified, setCroppedVerified] = useState(false);
@@ -39,10 +46,53 @@ const AddBlog = () => {
     ],
   };
 
+
+
   const generateContent = async () => {};
 
   const onSubmitHandler = async (e) => {
-    e.preventDefault();
+    try {
+      e.preventDefault();
+      setIsAdding(true);
+      const blog = {
+        title,
+        subTitle,
+        description: quillRef.current.root.innerHTML,
+        category,
+        isPublished,
+      };
+      const formData = new FormData();
+      // Stringify the blog object to JSON format for transmission in FormData,
+      // ensuring compatibility and preserving its structure for server processing.
+      formData.append("blog", JSON.stringify(blog));
+            // Convert blob URL to actual blob and append to FormData
+      if (image) {
+        if (canUseCropper && image.startsWith("blob:")) {
+          const response = await fetch(image);
+          const blob = await response.blob();
+          const imageBlob = new Blob([blob], { type: "image/png" });
+          formData.append("image", imageBlob);
+        } else formData.append("image", image);
+      } else {
+        toast.error("Upload at least an image.");
+        return;
+      }
+      const { data } = await axios.post("/api/blog/add", formData);
+      if (data.success) {
+        toast.success(data.message);
+        setImage(false);
+        setTitle("");
+        setSubTitle('')
+        setIsPublished(false)
+        quillRef.current.root.innerHTML = "";
+        setCategory("Startup");
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+    }
+    finally{
+      setIsAdding(false)
+    }
   };
 
   useEffect(() => {
@@ -61,6 +111,16 @@ const AddBlog = () => {
     >
       <div className="bg-white w-full max-w-3xl p-4 md:p-10 sm:m-10 shadow rounded">
         <p>Upload thumbnail</p>
+                <div className="flex gap-2 mt-4">
+          <p>Use Cropper? <b>(Beta)</b></p>
+          <input
+            type="checkbox"
+            checked={canUseCropper}
+            className="scale-125 cursor-pointer"
+            // Update the state based on the checkbox's current checked status for accurate state management
+            onChange={(e) => setCanUseCropper(e.target.checked)}
+          />
+        </div>
         <label htmlFor="image" className="cursor-pointer">
           <img
             onClick={() => setOpen(true)}
@@ -74,7 +134,7 @@ const AddBlog = () => {
             }
             alt="Upload"
           />
-          {open && (
+          {(canUseCropper && open) ? (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
               {/* Backdrop */}
               <div
@@ -107,7 +167,13 @@ const AddBlog = () => {
                 )}
               </div>
             </div>
-          )}
+          ) : (            <input
+              onChange={(e) => setImage(e.target.files[0])}
+              type="file"
+              name="image"
+              id="image"
+              hidden
+            />)}
         </label>
         <p className="mt-4">Blog Title</p>
         <input
@@ -167,10 +233,11 @@ const AddBlog = () => {
           />
         </div>
         <button
+          disabled={isAdding}
           type="submit"
-          className="mt-8 w-40 h-10 bg-primary text-white rounded cursor-pointer text-sm hover:scale-105"
+          className={`${isAdding ? "cursor-not-allowed bg-primary/80 " : " cursor-pointer bg-primary"} mt-8 w-40 h-10 text-white rounded  text-sm hover:scale-105`}
         >
-          Add Blog
+          {isAdding ? "Adding..." : "Add Blog"}
         </button>
       </div>
     </form>

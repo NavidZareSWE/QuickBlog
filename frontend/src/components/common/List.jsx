@@ -1,11 +1,21 @@
 import { useState } from "react";
 // eslint-disable-next-line no-unused-vars
 import { motion, spring } from "motion/react";
-import { blog_data } from "../../assets/images/assets";
+
 import BlogCard from "./BlogCard";
+import { useAppContext } from "../../hooks/useAppContext";
 
 const List = ({ list, initialActiveItem = undefined }) => {
   const [menu, setMenu] = useState(initialActiveItem || list[0]);
+  const { blogs, input } = useAppContext();
+  const filteredBlogs = () => {
+    if (input === "") return blogs;
+    return blogs.filter(
+      (blog) =>
+        blog.title.toLowerCase().includes(input.toLowerCase()) ||
+        blog.category.toLowerCase().includes(input.toLowerCase())
+    );
+  };
 
   return (
     <div>
@@ -30,7 +40,7 @@ const List = ({ list, initialActiveItem = undefined }) => {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 mb-24 mx-8 sm:mx-16 xl:mx-40">
         {/* --- Blog Cards --- */}
-        {blog_data
+        {filteredBlogs()
           .filter((blog) => (menu === "All" ? true : blog.category === menu))
           .map((blog) => (
             <BlogCard key={blog._id} blog={blog} />

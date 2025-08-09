@@ -1,7 +1,16 @@
+import { useRef } from "react";
 import { assets } from "../../assets/images/assets";
+import { useAppContext } from "../../hooks/useAppContext";
 import Form from "../common/Form";
 
 const Header = () => {
+  const { setInput, input } = useAppContext();
+  const fromRef = useRef();
+
+  const onClear = () => {
+    setInput('')
+    fromRef.current.clear();
+  }
   return (
     <div className="mx-8 sm:mx-16 xl:mx-24 relative">
       <div className="text-center mt-20 mb-8">
@@ -24,7 +33,20 @@ const Header = () => {
           write without filters. Whether it's one word or a thousand, your story
           starts right here.
         </p>
-        <Form placeholder={"Search for blogs"} required={true} />
+        <Form
+          placeholder={"Search for blogs"}
+          required={true}
+          onSubmit={(value) => setInput(value)}
+          ref={fromRef}
+        />
+      </div>
+
+      <div className="text-center">
+        {input && (
+          <button onClick={onClear} className="border font-light text-xs py-1 px-3 rounded-sm shadow-custom-sm cursor-pointer">
+            Clear Search
+          </button>
+        )}
       </div>
       <img
         src={assets.gradientBackground}

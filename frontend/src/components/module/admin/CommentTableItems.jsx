@@ -1,8 +1,42 @@
+import toast from "react-hot-toast";
 import { assets } from "../../../assets/images/assets";
+import { useAppContext } from "../../../hooks/useAppContext";
 
 const CommentTableItems = ({ comment, fetchComments }) => {
   const { blog, createdAt, _id } = comment;
   const BlogDate = new Date(createdAt);
+  const { axios } = useAppContext();
+
+  const approveComment = async () => {
+    try {
+      const { data } = await axios.post("/api/admin/approve-comment", {
+        id: _id,
+      });
+      if (toast.success) {
+        toast.success(data.message);
+        fetchComments();
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+    }
+  };
+  const deleteComment = async () => {
+    try {
+      const confirm = window.confirm(
+        "Are you sure you want to delete this comment?"
+      );
+      if (!confirm) return;
+      const { data } = await axios.post("/api/admin/delete-comment", {
+        id: _id,
+      });
+      if (toast.success) {
+        toast.success(data.message);
+        fetchComments();
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+    }
+  };
 
   return (
     <tr className="border-y border-gray-300">
@@ -21,6 +55,7 @@ const CommentTableItems = ({ comment, fetchComments }) => {
         <div className="inline-flex items-center gap-4">
           {!comment.isApproved ? (
             <img
+              onClick={approveComment}
               src={assets.tick_icon}
               alt="Approve"
               className=" w-5 hover:scale-110 transition-all cursor-pointer"
@@ -31,6 +66,7 @@ const CommentTableItems = ({ comment, fetchComments }) => {
             </p>
           )}
           <img
+            onClick={deleteComment}
             src={assets.bin_icon}
             alt="Remove"
             className=" w-5 hover:scale-110 transition-all cursor-pointer"

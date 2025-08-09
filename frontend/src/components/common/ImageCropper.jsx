@@ -96,6 +96,7 @@ const ImageCropper = ({
       try {
         const croppedDataURL = cropperRef.current.getDataURL();
         const objectURL = await dataURLToObjectURL(croppedDataURL);
+
         setCroppedImage(objectURL);
 
         // Optional: Store the object URL for cleanup later
